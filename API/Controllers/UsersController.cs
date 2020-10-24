@@ -6,12 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class UsersController
+    public class UsersController : BaseApiController 
     {
 
         private readonly DataContext _context;
@@ -21,12 +20,14 @@ namespace API.Controllers
             _context = context;
 
         }
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
         {
                 return await _context.Users.ToListAsync();
         }
           [HttpGet("{id}")]
+          [Authorize]
           public async Task<ActionResult<AppUser>> GetUser(int id)
         {
                 return await _context.Users.FindAsync(id);
